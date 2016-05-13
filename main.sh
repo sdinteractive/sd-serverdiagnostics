@@ -66,6 +66,10 @@ data="$data&curlVersion=$(serverdiagnostic curl 1)"
 # Apache Version
 if hash httpd 2>/dev/null; then
     data="$data&apacheVersion=$(serverdiagnostic httpd 1)"
+elif hash httpd24u 2>/dev/null; then
+    data="$data&apacheVersion=$(serverdiagnostic httpd24u 1)"
+elif hash apache 2>/dev/null; then
+    data="$data&apacheVersion=$(serverdiagnostic apache 1)"
 fi
 
 # Nginx Version
