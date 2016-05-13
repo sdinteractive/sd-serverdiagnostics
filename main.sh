@@ -26,14 +26,30 @@ urlencode() {
     LC_COLLATE=$old_lc_collate
 }
 
+# Used to get the value that will be sent as a server diagnostic
+# You can send it 3 arguments:
+#
+# 1. The diagnostic your are looking up
+# 2. Should we try to get the version information through a package manager?
+# 3. Is this a file we are talking about
+#
+# It will run the value through a urlencode function before returning it
 serverdiagnostic() {
     local diagnostic="$1"
 
     if [ -n "$2" ]; then
         if hash rpm 2>/dev/null; then
-            diagnostic=$(rpm -q --queryformat '%{version}-%{release}' $diagnostic)
+            if [ -n "$3" ]; then
+                diagnostic=$(rpm -qf --queryformat '%{version}-%{release}' $diagnostic)
+            else
+                diagnostic=$(rpm -q --queryformat '%{version}-%{release}' $diagnostic)
+            fi
         elif hash dpkg-query 2>/dev/null; then
-            diagnostic=$(dpkg-query -W -f='${Version}' $diagnostic)
+            if [ -n "$3" ]; then
+                diagnostic=$(dpkg-query -S $diagnostic | awk '{ print $1 }' | tr -d ':' | xargs dpkg-query -W -f='${Version}')
+            else
+                diagnostic=$(dpkg-query -W -f='${Version}' $diagnostic)
+            fi
         fi
     fi
 
@@ -65,11 +81,7 @@ data="$data&curlVersion=$(serverdiagnostic curl 1)"
 
 # Apache Version
 if hash httpd 2>/dev/null; then
-    data="$data&apacheVersion=$(serverdiagnostic httpd 1)"
-elif hash httpd24u 2>/dev/null; then
-    data="$data&apacheVersion=$(serverdiagnostic httpd24u 1)"
-elif hash apache 2>/dev/null; then
-    data="$data&apacheVersion=$(serverdiagnostic apache 1)"
+    data="$data&apacheVersion=$(serverdiagnostic /usr/sbin/httpd 1 1)"
 fi
 
 # Nginx Version
