@@ -76,6 +76,10 @@ data="$data&hostname=$(serverdiagnostic "$(hostname)")"
 osVersion=$(cat /etc/*-release | head -n 1)
 data="$data&osVersion=$(serverdiagnostic "$osVersion")"
 
+# Kernel Release
+kernelRelease=$(uname -r)
+data="$data&kernelRelease=$(serverdiagnostic "$kernelRelease")"
+
 # cURL version
 data="$data&curlVersion=$(serverdiagnostic curl 1)"
 
