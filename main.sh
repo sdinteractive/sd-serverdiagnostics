@@ -58,6 +58,14 @@ serverdiagnostic() {
     echo $diagnostic
 }
 
+fileSystemData() {
+    result="{"
+    result="$result$(df -Ph | grep -vE 'Filesystem' | awk '{print "\"" $1 "\": {\"Size\": \"" $2 "\", \"Used\": \"" $3 "\"},"}' | tr '\n' ' '| head -c-2)"
+    result="$result}"
+
+    echo $result
+}
+
 ################################
 # Prepare the post data
 ################################
@@ -75,6 +83,14 @@ data="$data&hostname=$(serverdiagnostic "$(hostname)")"
 # OS Version
 osVersion=$(cat /etc/*-release | head -n 1)
 data="$data&osVersion=$(serverdiagnostic "$osVersion")"
+
+# Kernel Release
+kernelRelease=$(uname -r)
+data="$data&kernelRelease=$(serverdiagnostic "$kernelRelease")"
+
+# File Systems
+fileSystems=$(fileSystemData)
+data="$data&fileSystems=$(serverdiagnostic "$fileSystems")"
 
 # cURL version
 data="$data&curlVersion=$(serverdiagnostic curl 1)"
