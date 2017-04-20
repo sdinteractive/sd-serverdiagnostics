@@ -1,9 +1,9 @@
 # sd-serverdiagnostics
 Server Connector For MageDiagnostics
 
-Installation Process:
+## Installation Process:
 
-- Copy the repo contents to the /opt folder on each webserver
+- `git clone` the repo contents to the /opt folder on each webserver
 
 - cp .env.sample .env
 
@@ -11,4 +11,4 @@ Installation Process:
 
 - In the .env file, set the `SD_MAGEDIAGNOSTICS_API_ENDPOINT` to `https://magediagnostics.com:1234/api/v1/server`
 
-- Add a cron tab entry `0 0 * * * sh main.sh`
+- Add a cron tab entry `0 0 * * * /opt/sd-serverdiagnostics/main.sh`
