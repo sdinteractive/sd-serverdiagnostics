@@ -3,7 +3,8 @@
 ################################
 # Pull in the configuration
 ################################
-source '.env'
+BASEDIR=$(dirname "$0")
+source "$BASEDIR/.env"
 
 ################################
 # Functions
