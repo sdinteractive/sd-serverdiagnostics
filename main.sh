@@ -115,4 +115,4 @@ data="$data&openSslVersion=$(serverdiagnostic openssl 1)"
 ################################
 # Execute the request
 ################################
-curl -k -H "Authorization: Bearer $SD_MAGEDIAGNOSTICS_SERVER_KEY" --data "$data" $SD_MAGEDIAGNOSTICS_API_ENDPOINT
+curl -k -H -s "Authorization: Bearer $SD_MAGEDIAGNOSTICS_SERVER_KEY" --data "$data" $SD_MAGEDIAGNOSTICS_API_ENDPOINT
